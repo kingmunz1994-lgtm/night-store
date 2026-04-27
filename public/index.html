@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Night Store · ZK Merch Platform on Midnight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"/>
+<link rel="stylesheet" href="css/nightstore.css"/>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Night <span>Store</span></div>
+  <div class="nav-right">
+    <button class="btn btn-primary btn-sm" id="wallet-btn" onclick="handleWalletClick()">
+      <span id="wallet-dot" style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;margin-right:4px;"></span>
+      <span id="wallet-label">Sign in</span>
+    </button>
+  </div>
+</nav>
+
+<div id="toast-wrap"></div>
+
+<div class="page-inner">
+
+  <div class="hero">
+    <div class="hero-tag">🛍️ Night Store · ZK Merch Platform · Midnight Network</div>
+    <h1>Drop your logo.<br><em>Get your store.</em></h1>
+    <p>Any crypto project. Any token. Any community. Upload your logo and your full merch store is live in 5 minutes. Printful prints and ships globally. Token holders earn 50% of every sale.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary btn-lg" onclick="uploadLogo()">Upload your logo →</button>
+      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('partners-section').scrollIntoView({behavior:'smooth'})">Browse stores</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--rim);border-radius:14px;overflow:hidden;margin-bottom:28px;">
+    <div style="padding:14px;text-align:center;border-right:1px solid var(--rim);"><div style="font-size:18px;font-weight:800;font-family:var(--mono);color:var(--plasma);">312</div><div style="font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Stores live</div></div>
+    <div style="padding:14px;text-align:center;border-right:1px solid var(--rim);"><div style="font-size:18px;font-weight:800;font-family:var(--mono);color:var(--green);">$84K</div><div style="font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Holder earnings</div></div>
+    <div style="padding:14px;text-align:center;border-right:1px solid var(--rim);"><div style="font-size:18px;font-weight:800;font-family:var(--mono);color:var(--gold);">8</div><div style="font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Products per store</div></div>
+    <div style="padding:14px;text-align:center;"><div style="font-size:18px;font-weight:800;font-family:var(--mono);">2.5%</div><div style="font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Platform fee</div></div>
+  </div>
+
+  <!-- Upload -->
+  <div style="margin-bottom:12px;font-size:11px;font-weight:700;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Your project</div>
+  <div class="field" style="max-width:360px;margin-bottom:16px;">
+    <label class="label">Project / token name</label>
+    <input class="input" id="project-name" placeholder="e.g. NightDoge" type="text"/>
+  </div>
+
+  <div class="nst-upload" id="nst-upload-area" onclick="uploadLogo()">
+    <div class="nst-upload-icon">⬆️</div>
+    <div class="nst-upload-title">Drop your logo here</div>
+    <div class="nst-upload-sub">PNG, SVG, or JPG · Any size · We handle the rest</div>
+    <div style="margin-top:16px;"><button class="btn btn-primary btn-sm" onclick="event.stopPropagation();uploadLogo()">Choose file →</button></div>
+  </div>
+
+  <!-- Templates -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Templates — designed by Tiarna Carter</div>
+    <div class="nst-templates">
+      <div class="nst-template selected" onclick="selectTemplate(0)"><div class="nst-template-icon">👕</div>Logo chest + statement back</div>
+      <div class="nst-template" onclick="selectTemplate(1)"><div class="nst-template-icon">🌑</div>Large logo back print</div>
+      <div class="nst-template" onclick="selectTemplate(2)"><div class="nst-template-icon">⊘</div>Minimal logo corner</div>
+      <div class="nst-template" onclick="selectTemplate(3)"><div class="nst-template-icon">🔄</div>All-over pattern</div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Your store generates automatically</div>
+    <div class="nst-products" id="nst-product-grid"></div>
+  </div>
+
+  <!-- Live store section -->
+  <div id="store-live" style="display:none;">
+    <div class="card">
+      <div class="card-title">📊 Revenue dashboard</div>
+      <div class="card-sub">Token holders earn 50% of every sale. Close the epoch to distribute revenue to all holders proportionally.</div>
+      <div class="rev-grid">
+        <div class="rev-stat"><div class="rev-stat-label">Total sales</div><div class="rev-stat-val" id="rev-total-sales" style="color:var(--gold);">0</div></div>
+        <div class="rev-stat"><div class="rev-stat-label">Epoch revenue</div><div class="rev-stat-val" id="rev-epoch-revenue" style="color:var(--green);">0 NIGHT</div></div>
+        <div class="rev-stat"><div class="rev-stat-label">Your claimable</div><div class="rev-stat-val" id="rev-claimable" style="color:var(--cyan);">0 NIGHT</div></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="recordSale()">+ Record sale</button>
+        <button class="btn btn-primary btn-sm" onclick="closeEpoch()">🔒 Close epoch</button>
+        <button class="btn btn-green btn-sm" onclick="claimRevenue()">⚡ Claim revenue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner stores -->
+  <div id="partners-section" class="card">
+    <div class="card-title">🌐 Partner stores</div>
+    <div class="card-sub">Crypto projects and communities already live on Night Store.</div>
+    <div class="nst-partners" id="nst-partners-grid"></div>
+  </div>
+
+  <!-- How it works -->
+  <div class="card" style="background:transparent;border-color:var(--rim);">
+    <div style="font-size:16px;font-weight:800;margin-bottom:20px;text-align:center;">How Night Store works</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;text-align:center;">
+      <div><div style="font-size:28px;margin-bottom:8px;">⬆️</div><div style="font-weight:700;font-size:13px;margin-bottom:4px;">Upload logo</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">Drop your PNG, SVG, or JPG. Any project. Any community. Any token.</div></div>
+      <div><div style="font-size:28px;margin-bottom:8px;">🏭</div><div style="font-weight:700;font-size:13px;margin-bottom:4px;">Products generated</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">8 products auto-generated with your logo applied. Hoodies, tees, caps, stickers, and more.</div></div>
+      <div><div style="font-size:28px;margin-bottom:8px;">🛒</div><div style="font-weight:700;font-size:13px;margin-bottom:4px;">Store goes live</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">Your store is live in 5 minutes. Printful prints and ships globally. You keep everything above cost minus 2.5%.</div></div>
+      <div><div style="font-size:28px;margin-bottom:8px;">💰</div><div style="font-weight:700;font-size:13px;margin-bottom:4px;">Holders earn</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">50% of every sale goes to token holders. Distributed per epoch. Claimed privately on Midnight.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="overlay" id="ov-wallet" onclick="if(event.target===this)closeModal('ov-wallet')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('ov-wallet')">✕</button>
+    <div class="wc-icon">🛍️</div>
+    <div class="wc-title">Connect to launch store</div>
+    <div class="wc-sub">Connect a Midnight wallet to launch your store and claim revenue as a holder.</div>
+    <button class="btn btn-primary btn-full btn-lg" onclick="connectDemo()">🎭 Try Demo Mode</button>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:center;">Demo uses simulated earnings · no real funds</div>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+</body>
+</html>
